@@ -1,34 +1,48 @@
+// import the gql tagged template function
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-  type User {
+type Book {
     _id: ID!
-    username: String!
-    email: String!
-    password: String!
+    bookId: String
+    authors: [String]
+    # authors: String
+    description: String
+    title: String
+    image: String
+    link: String
   }
-
-    type Query {
-      tech: [User]
-      user(id: ID!): User
-    }
+type User {
+    _id: ID!
+    username: String
+    email: String
+    bookCount: Int
+    savedBooks: [Book]
+  }
+input savedBook {
+    description: String
+    title: String
+    bookId: String
+    image: String
+    link: String
+    authors: [String]
+}
+type Query {
+    me: User  
+  }
+type Mutation {
+    login(email: String!, password: String!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
+    saveBook(input: savedBook!): User
+    removeBook(bookId: ID!): User
+}
+type Auth {
+    token: ID!
+    user: User
+  }
 `;
 
-// matchups(_id: String): [Matchup]
 
+
+// export the typeDefs
 module.exports = typeDefs;
-
-// type Matchup {
-//   _id: ID!
-//   tech1: String!
-//   tech2: String!
-//   tech1_votes: Int
-//   tech2_votes: Int
-// }
-
-
-
-// type Mutation {
-//   createMatchup(tech1: String!, tech2: String!): Matchup
-//   createVote(_id: String!, techNum: Int!): Matchup
-// }
